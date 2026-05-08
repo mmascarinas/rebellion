@@ -7,6 +7,11 @@
 	const config = $derived(routes[currentRoute()] ?? null)
 	const Page = $derived(config?.component ?? null)
 	const showHeader = $derived(config?.showHeader ?? true)
+	const title = $derived(config?.title ?? 'Rebellion')
+
+	$effect(() => {
+		document.title = title
+	})
 </script>
 
 {#if Page}

@@ -2,59 +2,53 @@
 	import ToggleSwitch from '../ToggleSwitch.svelte'
 	import { toggleTheme, isDark } from '../../lib/theme.svelte'
 
-	let dropdownOpen = $state(false)
+	let mobileMenuOpen = $state(false)
 
-	function toggleDropdown() {
-		dropdownOpen = !dropdownOpen
+	function toggleMobileMenu() {
+		mobileMenuOpen = !mobileMenuOpen
 	}
 
-	function closeDropdown() {
-		dropdownOpen = false
+	function closeAll() {
+		mobileMenuOpen = false
 	}
 
 	function handleClickOutside(e: MouseEvent) {
 		const target = e.target as HTMLElement
-		if (!target.closest('.profile')) {
-			dropdownOpen = false
+		if (!target.closest('.hamburger') && !target.closest('.mobile-menu')) {
+			mobileMenuOpen = false
 		}
 	}
 </script>
 
 <svelte:window onclick={handleClickOutside} />
 
-<div class="profile">
+<div class="mobile-nav">
 	<button
-		class="profile-btn"
-		aria-label="Profile menu"
-		onclick={toggleDropdown}
+		class="hamburger"
+		class:active={mobileMenuOpen}
+		aria-label="Menu"
+		onclick={toggleMobileMenu}
 	>
-		<div class="avatar">
-			<span class="avatar-placeholder">?</span>
-		</div>
-		<svg
-			class="chevron"
-			class:open={dropdownOpen}
-			viewBox="0 0 12 8"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="1.5"
-		>
-			<path d="M1 1.5l5 5 5-5" />
-		</svg>
+		<span class="bar"></span>
+		<span class="bar"></span>
+		<span class="bar"></span>
 	</button>
 
-	{#if dropdownOpen}
-		<div class="dropdown">
-			<button class="dropdown-item" onclick={closeDropdown}>
-				<span class="dropdown-icon">⚙</span>
+	{#if mobileMenuOpen}
+		<div class="mobile-menu">
+			<button class="mobile-item" onclick={closeAll}>About Us</button>
+			<button class="mobile-item" onclick={closeAll}>How to Play</button>
+			<div class="mobile-divider"></div>
+			<button class="mobile-item" onclick={closeAll}>
+				<span class="mobile-icon">⚙</span>
 				Settings
 			</button>
-			<button class="dropdown-item" onclick={closeDropdown}>
-				<span class="dropdown-icon">★</span>
+			<button class="mobile-item" onclick={closeAll}>
+				<span class="mobile-icon">★</span>
 				Subscriptions
 			</button>
-			<div class="dropdown-divider"></div>
-			<div class="dropdown-item theme-row">
+			<div class="mobile-divider"></div>
+			<div class="mobile-item theme-row">
 				<span>Dark Mode</span>
 				<ToggleSwitch on={isDark()} onToggle={toggleTheme} />
 			</div>
@@ -63,64 +57,63 @@
 </div>
 
 <style lang="scss">
-	.profile {
+	.mobile-nav {
+		display: none;
 		position: relative;
 	}
 
-	.profile-btn {
+	.hamburger {
 		display: flex;
-		align-items: center;
-		gap: 8px;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		width: 40px;
+		height: 40px;
 		background: none;
-		border: none;
+		border: 1px solid var(--color-border);
 		border-radius: 8px;
-		padding: 6px 12px;
-		color: var(--color-text);
+		padding: 10px;
 		cursor: pointer;
 		transition:
-			background 0.2s ease,
-			box-shadow 0.2s ease;
+			border-color 0.2s ease,
+			background 0.2s ease;
+
+		.bar {
+			display: block;
+			width: 100%;
+			height: 2px;
+			background: var(--color-text);
+			border-radius: 1px;
+			transition:
+				transform 0.3s ease,
+				opacity 0.3s ease;
+		}
+
+		&.active {
+			border-color: var(--color-primary);
+			background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+
+			.bar:nth-child(1) {
+				transform: translateY(7px) rotate(45deg);
+			}
+			.bar:nth-child(2) {
+				opacity: 0;
+			}
+			.bar:nth-child(3) {
+				transform: translateY(-7px) rotate(-45deg);
+			}
+		}
 
 		&:hover {
-			background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-			box-shadow: 0 0 12px
-				color-mix(in srgb, var(--color-primary) 15%, transparent);
+			border-color: var(--color-primary);
 		}
 	}
 
-	.avatar {
-		width: 28px;
-		height: 28px;
-		border-radius: 50%;
-		background: var(--color-surface);
-		border: 1.5px solid var(--color-border);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
-	}
-
-	.avatar-placeholder {
-		font-size: 12px;
-		font-weight: 500;
-		color: var(--color-text-secondary);
-	}
-
-	.chevron {
-		width: 10px;
-		height: 10px;
-		transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-
-		&.open {
-			transform: rotate(180deg);
-		}
-	}
-
-	.dropdown {
+	.mobile-menu {
 		position: absolute;
 		top: calc(100% + 12px);
 		right: 0;
-		min-width: 200px;
+		min-width: 220px;
 		background: color-mix(in srgb, var(--color-bg) 95%, transparent);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
@@ -134,7 +127,7 @@
 		z-index: 200;
 	}
 
-	.dropdown-item {
+	.mobile-item {
 		display: flex;
 		align-items: center;
 		gap: 10px;
@@ -146,6 +139,7 @@
 		color: var(--color-text);
 		font-family: inherit;
 		font-size: 13px;
+		font-weight: 400;
 		cursor: pointer;
 		transition:
 			background 0.15s ease,
@@ -157,14 +151,14 @@
 		}
 	}
 
-	.dropdown-icon {
+	.mobile-icon {
 		font-size: 14px;
 		width: 20px;
 		text-align: center;
 		color: var(--color-text-secondary);
 	}
 
-	.dropdown-divider {
+	.mobile-divider {
 		height: 1px;
 		background: var(--color-border);
 		margin: 4px 8px;
@@ -179,6 +173,12 @@
 		&:hover {
 			background: none;
 			color: var(--color-text);
+		}
+	}
+
+	@media (max-width: 550px) {
+		.mobile-nav {
+			display: block;
 		}
 	}
 

@@ -1,97 +1,147 @@
 <script lang="ts">
-	import { toggleTheme } from '../../lib/theme'
-	import logo from '../assets/images/rebellion.png'
+	import logo from '../../assets/images/rebellion.png'
 	import ProfileMenu from './ProfileMenu.svelte'
-
-	let mobileMenuOpen = $state(false)
-
-	function toggleMobileMenu() {
-		mobileMenuOpen = !mobileMenuOpen
-	}
-
-	function closeAll() {
-		mobileMenuOpen = false
-	}
-
-	function handleClickOutside(e: MouseEvent) {
-		const target = e.target as HTMLElement
-		if (!target.closest('.hamburger') && !target.closest('.mobile-menu')) {
-			mobileMenuOpen = false
-		}
-	}
+	import MobileNav from './MobileNav.svelte'
 </script>
 
-<svelte:window onclick={handleClickOutside} />
-
 <header class="header">
-	<img src={logo} alt="Rebellion" class="logo" />
+	<div class="header-glow"></div>
 
-	<nav class="nav-right">
-		<button class="nav-link">About Us</button>
+	<a href="#/" class="logo-wrap">
+		<img src={logo} alt="Rebellion" class="logo" />
+	</a>
 
-		<ProfileMenu />
+	<nav class="nav-center">
+		<button class="nav-link">
+			<span class="nav-link-text">About Us</span>
+		</button>
+		<button class="nav-link">
+			<span class="nav-link-text">How to Play</span>
+		</button>
 	</nav>
 
-	<div class="mobile-nav">
-		<button class="hamburger" aria-label="Menu" onclick={toggleMobileMenu}>
-			<svg
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				width="22"
-				height="22"
-			>
-				{#if mobileMenuOpen}
-					<path d="M6 6l12 12M6 18L18 6" />
-				{:else}
-					<path d="M4 6h16M4 12h16M4 18h16" />
-				{/if}
-			</svg>
-		</button>
-
-		{#if mobileMenuOpen}
-			<div class="mobile-menu">
-				<button class="dropdown-item" onclick={closeAll}>About Us</button>
-				<div class="dropdown-divider"></div>
-				<button class="dropdown-item" onclick={closeAll}>
-					<span class="dropdown-icon">⚙</span>
-					Settings
-				</button>
-				<button class="dropdown-item" onclick={closeAll}>
-					<span class="dropdown-icon">★</span>
-					Subscriptions
-				</button>
-				<div class="dropdown-divider"></div>
-				<button
-					class="dropdown-item"
-					onclick={() => {
-						toggleTheme()
-						closeAll()
-					}}
-				>
-					<span class="dropdown-icon">◑</span>
-					Toggle Theme
-				</button>
-			</div>
-		{/if}
+	<div class="nav-right">
+		<ProfileMenu />
 	</div>
+
+	<MobileNav />
+
+	<div class="header-border"></div>
 </header>
 
 <style lang="scss">
 	.header {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--color-border);
+		padding: 0 16px 0 0;
+		height: 72px;
+		background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		z-index: 100;
+	}
 
-		.logo {
-			outline: 1px solid red;
-			height: clamp(90px, 10vw, 128px);
-			width: auto;
+	.header-glow {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 60%;
+		height: 1px;
+		background: radial-gradient(
+			ellipse at center,
+			var(--color-primary) 0%,
+			transparent 70%
+		);
+		opacity: 0.5;
+		pointer-events: none;
+	}
 
-			:global([data-theme='dark']) & {
-				filter: invert(1) hue-rotate(180deg);
+	.header-border {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			var(--color-border) 20%,
+			var(--color-primary) 50%,
+			var(--color-border) 80%,
+			transparent 100%
+		);
+		opacity: 0.6;
+	}
+
+	.logo-wrap {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		transition: filter 0.3s ease;
+
+		&:hover {
+			filter: drop-shadow(
+				0 0 8px color-mix(in srgb, var(--color-primary) 40%, transparent)
+			);
+		}
+	}
+
+	.logo {
+		height: 48px;
+		width: auto;
+
+		:global([data-theme='dark']) & {
+			filter: invert(1) hue-rotate(180deg);
+		}
+	}
+
+	.nav-center {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.nav-link {
+		position: relative;
+		background: none;
+		border: none;
+		color: var(--color-text-secondary);
+		font-family: inherit;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		cursor: pointer;
+		padding: 8px 16px;
+		border-radius: 6px;
+		transition:
+			color 0.2s ease,
+			background 0.2s ease;
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 2px;
+			left: 50%;
+			transform: translateX(-50%) scaleX(0);
+			width: 60%;
+			height: 2px;
+			background: var(--color-primary);
+			border-radius: 1px;
+			transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+			box-shadow: 0 0 8px
+				color-mix(in srgb, var(--color-primary) 50%, transparent);
+		}
+
+		&:hover {
+			color: var(--color-text);
+			background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+
+			&::after {
+				transform: translateX(-50%) scaleX(1);
 			}
 		}
 	}
@@ -99,81 +149,12 @@
 	.nav-right {
 		display: flex;
 		align-items: center;
-		gap: 24px;
-	}
-
-	.nav-link {
-		background: none;
-		border: none;
-		color: var(--color-text-secondary);
-		font-family: inherit;
-		font-size: 13px;
-		font-weight: 500;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		cursor: pointer;
-		transition: color 0.15s ease;
-		padding: 6px 0;
-
-		&:hover {
-			color: var(--color-text);
-		}
-	}
-
-	.mobile-nav {
-		display: none;
-		position: relative;
-	}
-
-	.hamburger {
-		background: none;
-		border: 1px solid var(--color-border);
-		border-radius: 6px;
-		padding: 8px;
-		color: var(--color-text);
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: border-color 0.15s ease;
-
-		&:hover {
-			border-color: var(--color-primary);
-		}
-	}
-
-	.mobile-menu {
-		position: absolute;
-		top: calc(100% + 8px);
-		right: 0;
-		min-width: 200px;
-		background: var(--color-bg);
-		border: 1px solid var(--color-border);
-		border-radius: 8px;
-		padding: 6px 0;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-		animation: fadeIn 0.15s ease;
-		z-index: 200;
 	}
 
 	@media (max-width: 550px) {
+		.nav-center,
 		.nav-right {
 			display: none;
-		}
-
-		.mobile-nav {
-			display: block;
-		}
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(-4px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
 		}
 	}
 </style>

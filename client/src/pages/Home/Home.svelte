@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { push } from '../../lib/routing.svelte'
-	import CreateGameButton from './CreateGameButton.svelte'
+	import CreateGameModal from '../../components/CreateGameModal.svelte'
 
 	let hovered = $state<string | null>(null)
 	let showCreateGame = $state(false)
@@ -50,7 +50,7 @@
 </div>
 
 {#if showCreateGame}
-	<CreateGameButton
+	<CreateGameModal
 		onclose={() => (showCreateGame = false)}
 		oncreate={(config) => {
 			console.log('Create game:', config)

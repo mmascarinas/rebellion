@@ -2,6 +2,7 @@
 export interface RouteConfig {
 	component: any
 	showHeader?: boolean
+	title?: string
 }
 
 export type RouteMap = Record<string, RouteConfig>
