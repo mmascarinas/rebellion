@@ -88,7 +88,7 @@
 		}
 	]
 
-	const maxSeats = 7
+	const maxSeats = 6
 
 	const seats: Seat[] = Array.from({ length: maxSeats }, (_, i) => ({
 		index: i,
@@ -99,7 +99,7 @@
 	const deckRemaining = 7
 
 	const gameLog: LogEntry[] = [
-		{ id: 1, text: 'Game started — 4/7 players joined', type: 'system' },
+		{ id: 1, text: 'Game started — 4/6 players joined', type: 'system' },
 		{
 			id: 2,
 			text: 'ShadowBlade claimed Baron — took Tax (3 coins)',
@@ -347,12 +347,66 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background: radial-gradient(
-			ellipse at center,
-			color-mix(in srgb, var(--color-primary) 10%, var(--color-bg)),
-			var(--color-bg) 70%
-		);
+		background:
+			radial-gradient(
+				ellipse 60% 50% at 50% 50%,
+				color-mix(in srgb, var(--color-primary) 12%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				circle at 20% 80%,
+				color-mix(in srgb, #0ed3cf 6%, transparent),
+				transparent 40%
+			),
+			radial-gradient(
+				circle at 80% 20%,
+				color-mix(in srgb, #f43f8c 5%, transparent),
+				transparent 40%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in srgb, var(--color-bg) 97%, var(--color-primary)),
+				var(--color-bg)
+			);
 		overflow: hidden;
+
+		/* Subtle grid pattern overlay */
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background-image: radial-gradient(
+				circle,
+				color-mix(in srgb, var(--color-primary) 8%, transparent) 1px,
+				transparent 1px
+			);
+			background-size: 40px 40px;
+			pointer-events: none;
+			opacity: 0.4;
+		}
+
+		/* Table felt ellipse */
+		&::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 70%;
+			height: 60%;
+			border-radius: 50%;
+			border: 1px solid
+				color-mix(in srgb, var(--color-primary) 15%, var(--color-border));
+			background: radial-gradient(
+				ellipse at center,
+				color-mix(in srgb, var(--color-primary) 5%, transparent),
+				transparent 70%
+			);
+			box-shadow:
+				inset 0 0 60px color-mix(in srgb, var(--color-primary) 8%, transparent),
+				0 0 40px color-mix(in srgb, var(--color-primary) 5%, transparent);
+			pointer-events: none;
+		}
 	}
 
 	/* Center Deck + Treasury */
@@ -361,13 +415,17 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 16px;
-		z-index: 1;
+		z-index: 2;
 	}
 
 	.deck-stack {
 		position: relative;
 		width: 72px;
 		height: 100px;
+		filter: drop-shadow(
+			0 8px 24px
+				color-mix(in srgb, var(--color-primary) 20%, rgba(0, 0, 0, 0.3))
+		);
 	}
 
 	.deck-card {
@@ -390,10 +448,18 @@
 			background: linear-gradient(
 				135deg,
 				var(--color-surface),
-				color-mix(in srgb, var(--color-primary) 20%, var(--color-surface))
+				color-mix(in srgb, var(--color-primary) 25%, var(--color-surface))
 			);
-			box-shadow: 0 4px 16px
-				color-mix(in srgb, var(--color-primary) 15%, rgba(0, 0, 0, 0.15));
+			border-color: color-mix(
+				in srgb,
+				var(--color-primary) 30%,
+				var(--color-border)
+			);
+			box-shadow:
+				0 4px 16px
+					color-mix(in srgb, var(--color-primary) 20%, rgba(0, 0, 0, 0.2)),
+				inset 0 1px 0
+					color-mix(in srgb, var(--color-primary) 15%, rgba(255, 255, 255, 0.1));
 		}
 	}
 
@@ -410,23 +476,31 @@
 	.treasury {
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		padding: 6px 14px;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
+		gap: 8px;
+		padding: 8px 18px;
+		background: linear-gradient(
+			135deg,
+			var(--color-surface),
+			color-mix(in srgb, #ffb800 6%, var(--color-surface))
+		);
+		border: 1px solid color-mix(in srgb, #ffb800 20%, var(--color-border));
 		border-radius: 20px;
 		margin-top: 12px;
+		box-shadow:
+			0 4px 16px color-mix(in srgb, #ffb800 10%, transparent),
+			inset 0 1px 0 color-mix(in srgb, #ffb800 8%, rgba(255, 255, 255, 0.1));
 
 		.treasury-icon {
 			color: #ffb800;
-			font-size: 12px;
-			text-shadow: 0 0 6px rgba(255, 184, 0, 0.5);
+			font-size: 14px;
+			text-shadow: 0 0 8px rgba(255, 184, 0, 0.6);
 		}
 
 		.treasury-amount {
-			font-size: 13px;
-			font-weight: 500;
+			font-size: 14px;
+			font-weight: 700;
 			color: var(--color-text);
+			letter-spacing: 0.02em;
 		}
 	}
 
@@ -517,29 +591,25 @@
 		transform: translateX(-50%);
 	}
 	.seat-1 {
-		top: 35%;
+		bottom: 35%;
 		right: 6%;
 	}
 	.seat-2 {
-		top: 8%;
-		right: 25%;
+		top: 20%;
+		right: 12%;
 	}
 	.seat-3 {
-		top: 5%;
-		left: 50%;
-		transform: translateX(-50%);
+		top: 20%;
+		left: 12%;
 	}
 	.seat-4 {
-		top: 8%;
-		left: 25%;
-	}
-	.seat-5 {
-		top: 35%;
+		bottom: 35%;
 		left: 6%;
 	}
-	.seat-6 {
-		bottom: 30%;
-		left: 5%;
+	.seat-5 {
+		top: 10%;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 
 	/* Player Header (Avatar + Info) */
