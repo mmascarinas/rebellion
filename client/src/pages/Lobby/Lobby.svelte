@@ -6,6 +6,7 @@
 	import FilterGroup from '../../components/FilterGroup.svelte'
 	import FilterSelect from '../../components/FilterSelect.svelte'
 	import StatsBar, { type Stat } from '../../components/StatsBar.svelte'
+	import Pagination from '../../components/Pagination.svelte'
 
 	let showCreateGame = $state(false)
 
@@ -120,6 +121,7 @@
 	let searchQuery = $state('')
 	let filterStatus = $state<GameStatus | 'all'>('all')
 	let filterVisibility = $state<GameVisibility | 'all'>('all')
+	let currentPage = $state(1)
 
 	const totalPages = $derived(Math.ceil(mockGames.total / mockGames.perPage))
 
@@ -224,6 +226,8 @@
 			</div>
 		{/each}
 	</div>
+
+	<Pagination bind:currentPage {totalPages} />
 </div>
 
 {#if showCreateGame}
@@ -353,49 +357,6 @@
 		opacity: 0.6;
 	}
 
-	/* Pagination */
-	.pagination {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 16px 0;
-	}
-
-	.page-info {
-		font-size: 13px;
-		color: var(--color-text-secondary);
-	}
-
-	.page-buttons {
-		display: flex;
-		gap: 8px;
-	}
-
-	.page-btn {
-		padding: 8px 16px;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 6px;
-		color: var(--color-text);
-		font-family: inherit;
-		font-size: 12px;
-		font-weight: 500;
-		cursor: pointer;
-		transition:
-			border-color 0.15s ease,
-			background 0.15s ease;
-
-		&:hover:not(:disabled) {
-			border-color: var(--color-primary);
-			background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-		}
-
-		&:disabled {
-			opacity: 0.4;
-			cursor: not-allowed;
-		}
-	}
-
 	@keyframes pulse {
 		0%,
 		100% {
@@ -434,11 +395,6 @@
 
 		.create-btn {
 			justify-content: center;
-		}
-
-		.pagination {
-			flex-direction: column;
-			gap: 12px;
 		}
 	}
 
