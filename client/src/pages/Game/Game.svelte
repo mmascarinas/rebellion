@@ -22,11 +22,6 @@
 		isYou: boolean
 	}
 
-	interface Seat {
-		player: Player | null
-		index: number
-	}
-
 	const players: Player[] = [
 		{
 			id: '1',
@@ -84,10 +79,30 @@
 
 	const maxSeats = 6
 
-	const seats: Seat[] = Array.from({ length: maxSeats }, (_, i) => ({
-		index: i,
-		player: players[i] ?? null
-	}))
+	// Position layouts per player count
+	const layouts: Record<number, string[]> = {
+		2: ['bottom', 'top'],
+		3: ['bottom', 'top-left', 'top-right'],
+		4: ['bottom', 'top', 'top-right', 'top-left'],
+		5: ['bottom', 'top', 'top-left', 'top-right', 'bottom-left'],
+		6: ['bottom', 'bottom-right', 'top-right', 'top-left', 'bottom-left', 'top']
+	}
+
+	const allPositions = layouts[6]
+	const playerPositions = layouts[players.length] ?? layouts[6]
+	const vacantPositions = allPositions.filter(
+		(p) => !playerPositions.includes(p)
+	)
+
+	interface SeatData {
+		player: Player | null
+		position: string
+	}
+
+	const seats: SeatData[] = [
+		...players.map((p, i) => ({ player: p, position: playerPositions[i] })),
+		...vacantPositions.map((pos) => ({ player: null, position: pos }))
+	]
 
 	const treasury = 28
 	const deckRemaining = 7
@@ -181,7 +196,7 @@
 
 		<div class="players-ring">
 			{#each seats as seat}
-				<PlayerSeat player={seat.player} seatIndex={seat.index} />
+				<PlayerSeat player={seat.player} position={seat.position} />
 			{/each}
 		</div>
 

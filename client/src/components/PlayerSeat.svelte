@@ -21,10 +21,10 @@
 
 	interface Props {
 		player: Player | null
-		seatIndex: number
+		position: string
 	}
 
-	let { player, seatIndex }: Props = $props()
+	let { player, position }: Props = $props()
 
 	function aliveCards(p: Player): number {
 		return p.cards.filter((c) => !c.revealed).length
@@ -33,7 +33,7 @@
 
 {#if player}
 	<div
-		class="player-seat seat-{seatIndex} health-{aliveCards(
+		class="player-seat pos-{position} health-{aliveCards(
 			player
 		)} {player.isCurrentTurn ? 'active-turn' : ''} {player.isEliminated
 			? 'eliminated'
@@ -83,7 +83,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="player-seat seat-{seatIndex} vacant">
+	<div class="player-seat pos-{position} vacant">
 		<div class="player-header">
 			<div class="avatar avatar-vacant">
 				<span class="avatar-letter">?</span>
@@ -158,32 +158,32 @@
 		}
 	}
 
-	/* Positions around the table */
-	.seat-0 {
+	/* Named positions around the table */
+	.pos-bottom {
 		bottom: 120px;
 		left: 50%;
 		transform: translateX(-50%);
 	}
-	.seat-1 {
-		bottom: 35%;
-		right: 6%;
-	}
-	.seat-2 {
-		top: 20%;
-		right: 12%;
-	}
-	.seat-3 {
-		top: 20%;
-		left: 12%;
-	}
-	.seat-4 {
-		bottom: 35%;
-		left: 6%;
-	}
-	.seat-5 {
+	.pos-top {
 		top: 10%;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+	.pos-top-left {
+		top: 20%;
+		left: 12%;
+	}
+	.pos-top-right {
+		top: 20%;
+		right: 12%;
+	}
+	.pos-bottom-left {
+		bottom: 35%;
+		left: 6%;
+	}
+	.pos-bottom-right {
+		bottom: 35%;
+		right: 6%;
 	}
 
 	/* Player Header (Avatar + Info) */
@@ -338,16 +338,21 @@
 			padding: 8px 10px;
 		}
 
-		.seat-0 {
+		.pos-bottom {
 			bottom: 3%;
 		}
-		.seat-1 {
+		.pos-bottom-right {
 			right: 3%;
 		}
-		.seat-2 {
+		.pos-top-right {
 			top: 5%;
+			right: 5%;
 		}
-		.seat-3 {
+		.pos-top-left {
+			top: 5%;
+			left: 5%;
+		}
+		.pos-bottom-left {
 			left: 3%;
 		}
 	}
