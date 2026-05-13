@@ -207,7 +207,7 @@
 				<span class="deck-count">{deckRemaining}</span>
 			</div>
 			<div class="treasury">
-				<span class="treasury-icon">●</span>
+				<span class="treasury-icon">🪙</span>
 				<span class="treasury-amount">{treasury}</span>
 			</div>
 		</div>
@@ -239,7 +239,7 @@
 									{/if}
 								</span>
 								<span class="player-coins">
-									<span class="coin-icon">●</span>
+									<span class="coin-icon">🪙</span>
 									{player.coins}
 								</span>
 							</div>
@@ -304,7 +304,7 @@
 					<div class="action-meta">
 						{#if action.cost}
 							<span class="action-cost">
-								<span class="coin-icon">●</span>{action.cost}
+								<span class="coin-icon">🪙</span>{action.cost}
 							</span>
 						{/if}
 						{#if action.requires}
@@ -491,9 +491,8 @@
 			inset 0 1px 0 color-mix(in srgb, #ffb800 8%, rgba(255, 255, 255, 0.1));
 
 		.treasury-icon {
-			color: #ffb800;
-			font-size: 14px;
-			text-shadow: 0 0 8px rgba(255, 184, 0, 0.6);
+			font-size: 16px;
+			line-height: 1;
 		}
 
 		.treasury-amount {
@@ -509,6 +508,7 @@
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		z-index: 3;
 	}
 
 	.player-seat {
@@ -738,9 +738,8 @@
 	}
 
 	.coin-icon {
-		color: #ffb800;
-		font-size: 10px;
-		text-shadow: 0 0 4px rgba(255, 184, 0, 0.4);
+		font-size: 11px;
+		line-height: 1;
 	}
 
 	/* Player Cards */
