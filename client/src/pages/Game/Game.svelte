@@ -209,7 +209,7 @@
 <style lang="scss">
 	.game {
 		display: grid;
-		grid-template-columns: 1fr 340px;
+		grid-template-columns: 1fr 240px;
 		height: calc(100vh - 60px);
 		overflow: hidden;
 	}

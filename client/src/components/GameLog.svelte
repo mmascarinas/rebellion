@@ -125,4 +125,10 @@
 			max-height: 40vh;
 		}
 	}
+
+	@media (max-width: 700px) {
+		.sidebar {
+			max-height: 25vh;
+		}
+	}
 </style>

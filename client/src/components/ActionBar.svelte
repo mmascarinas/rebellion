@@ -175,4 +175,34 @@
 			flex-wrap: wrap;
 		}
 	}
+
+	@media (max-width: 860px) {
+		.action-bar {
+			padding: 8px 10px;
+			gap: 4px;
+		}
+
+		.action-btn {
+			padding: 6px 8px 4px;
+			height: 50px;
+			border-radius: 8px;
+		}
+
+		.action-label {
+			font-size: 9px;
+		}
+
+		.action-desc {
+			font-size: 8px;
+		}
+
+		.action-cost {
+			font-size: 8px;
+		}
+
+		.action-role {
+			font-size: 7px;
+			padding: 1px 4px;
+		}
+	}
 </style>
